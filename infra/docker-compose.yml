@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  juice-shop:
+    build: 
+      context: ..
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    # Controles de seguridad para el contenedor
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
