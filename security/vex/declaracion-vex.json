@@ -1,0 +1,22 @@
+{
+  "@context": "https://openvex.dev/ns/v0.2.0",
+  "@id": "https://openvex.dev/docs/example/vex-juice-shop-lodash",
+  "author": "Equipo de Seguridad Juice Shop (Gabriela Navarro y Sandra Soria)",
+  "timestamp": "2026-11-27T12:00:00Z",
+  "version": 1,
+  "statements": [
+    {
+      "vulnerability": {
+        "name": "CVE-2021-23337"
+      },
+      "products": [
+        {
+          "@id": "pkg:npm/lodash@4.17.15"
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "La vulnerabilidad está en la función 'template' de lodash. El código de OWASP Juice Shop no utiliza esta función en ninguna de sus rutas de ejecución, por lo que no es explotable. Se acepta el riesgo residual."
+    }
+  ]
+}
