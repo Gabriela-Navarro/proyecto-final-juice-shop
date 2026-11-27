@@ -79,7 +79,8 @@ jobs:
     name: DAST - ZAP Baseline
     runs-on: ubuntu-latest
     needs: build
-    # Usamos un servicio para que ZAP pueda ver a Juice Shop en la misma red
+    permissions:
+      contents: read
     services:
       juice-shop:
         image: bkimminich/juice-shop:latest
@@ -88,7 +89,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      # Esperamos a que el servicio esté listo
       - name: Wait for Juice Shop
         run: |
           sleep 20
@@ -98,9 +98,8 @@ jobs:
         uses: zaproxy/action-baseline@v0.12.0
         with:
           target: 'http://localhost:3000'
-          # Si el archivo no existe en el repo, esto fallará. Lo comentamos por seguridad
-          # rules_file_name: '.zap/rules.tsv' 
           cmd_options: '-a'
+          allow_issue_writing: false  # <--- ESTO ARREGLA EL ERROR DE ZAP
           
       - name: Upload ZAP Report
         uses: actions/upload-artifact@v4
@@ -119,13 +118,13 @@ jobs:
         uses: bridgecrewio/checkov-action@master
         with:
           directory: infra/
-          framework: dockerfile, docker_compose
+          framework: dockerfile, yaml 
           output_format: sarif
           output_file_path: checkov.sarif
-          soft_fail: true  # Esto evita que el job se ponga en rojo
+          soft_fail: true
           
       - name: Upload Checkov SARIF
         uses: github/codeql-action/upload-sarif@v3
         if: always()
         with:
-          sarif_file: checkov.sarif          
+          sarif_file: checkov.sarif      
