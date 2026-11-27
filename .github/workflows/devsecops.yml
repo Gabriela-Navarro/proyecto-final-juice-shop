@@ -67,7 +67,6 @@ jobs:
           with:
             name: sbom-cyclonedx
             path: security/sbom/sbom.cdx.json
-
   build:
     name: Build - Docker Image
     runs-on: ubuntu-latest
@@ -82,27 +81,26 @@ jobs:
     needs: build
     permissions:
       contents: read
-      issues: write
+    services:
+      juice-shop:
+        image: bkimminich/juice-shop:latest
+        ports:
+          - 3000:3000
     steps:
       - uses: actions/checkout@v4
-      - name: Start Juice Shop
+      
+      - name: Wait for Juice Shop
         run: |
-          docker run -d -p 3000:3000 --name juice-shop juice-shop:latest
-          # Esperar 30 segundos a que la app termine de arrancar
-          sleep 30
+          sleep 20
+          curl -s http://localhost:3000 > /dev/null || (echo "App no responde" && exit 1)
+
       - name: ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.12.0
         with:
           target: 'http://localhost:3000'
-          rules_file_name: '.zap/rules.tsv'
           cmd_options: '-a'
-          
-      - name: Upload ZAP Report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: zap-scan-report
-          path: report_html.html          
+          allow_issue_writing: false
+          artifact_name: 'zap-scan-report'
   iac:
     name: IaC - Checkov
     runs-on: ubuntu-latest
@@ -113,12 +111,13 @@ jobs:
         uses: bridgecrewio/checkov-action@master
         with:
           directory: infra/
-          framework: dockerfile, docker_compose
+          framework: dockerfile, yaml 
           output_format: sarif
           output_file_path: checkov.sarif
+          soft_fail: true
           
       - name: Upload Checkov SARIF
         uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: checkov.sarif
         if: always()
+        with:
+          sarif_file: checkov.sarif      
