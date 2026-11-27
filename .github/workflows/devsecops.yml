@@ -99,8 +99,8 @@ jobs:
         with:
           target: 'http://localhost:3000'
           cmd_options: '-a'
-          allow_issue_writing: false
-          artifact_name: 'zap-scan-report'
+          allow_issue_writing: false      
+          artifact_name: 'zap-report'      
   iac:
     name: IaC - Checkov
     runs-on: ubuntu-latest
