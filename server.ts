@@ -129,6 +129,7 @@ import { continueCode, continueCodeFindIt, continueCodeFixIt } from './routes/co
 import { ensureFileIsPassed, handleZipFileUpload, checkUploadSize, checkFileType, handleXmlUpload, handleYamlUpload } from './routes/fileUpload'
 
 const app = express()
+app.disable('x-powered-by')
 const server = new http.Server(app)
 
 // errorhandler requires us from overwriting a string property on it's module which is a big no-no with esmodules :/
