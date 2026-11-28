@@ -11,4 +11,6 @@ Para esta preentrega, el pipeline cuenta con dos etapas de seguridad con umbrale
    * **Qué solo avisa:** Severidades Medium, Low y Unknown.
    * *Nota:* Juice Shop no incluye `package-lock.json`, por lo que todavía no se revisan las librerías de npm. Esto se completa en la Fase 4.
 
-   
+
+
+
