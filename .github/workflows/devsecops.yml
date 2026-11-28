@@ -118,7 +118,7 @@ jobs:
       - name: Run Checkov on Dockerfile and Compose
         uses: bridgecrewio/checkov-action@master
         with:
-          directory: infra/
+          directory: .
           framework: dockerfile, yaml 
           output_format: sarif
           output_file_path: checkov.sarif
